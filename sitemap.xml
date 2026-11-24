@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://your-website-url.example.com/index.html</loc>
+    <loc>https://jakobden.github.io/stochastic_parrot/index.html</loc>
     <lastmod>2026-11-24T20:38:54.336Z</lastmod>
   </url>
   <url>
-    <loc>https://your-website-url.example.com/posts/attention-evolution/index.html</loc>
+    <loc>https://jakobden.github.io/stochastic_parrot/posts/attention-evolution/index.html</loc>
     <lastmod>2026-11-24T20:38:54.336Z</lastmod>
   </url>
   <url>
-    <loc>https://your-website-url.example.com/posts/about.html</loc>
+    <loc>https://jakobden.github.io/stochastic_parrot/posts/about.html</loc>
     <lastmod>2026-11-24T20:38:54.336Z</lastmod>
   </url>
 </urlset>
