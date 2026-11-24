@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2026-11-24">
+
+<title>A map of major attention mechanisms – Stochastic Parrot</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-158031087360bce0ff56dc785ce39e06.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Stochastic Parrot</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../posts/about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-page">
+      <h1 class="title">A map of major attention mechanisms</h1>
+            <p class="subtitle lead">An attempt to grasp them all</p>
+                                <div class="quarto-categories">
+                <div class="quarto-category">attention</div>
+                <div class="quarto-category">architectures</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta column-page">
+
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">November 24, 2026</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block column-page" id="quarto-document-content">
+
+
+
+
+
+<section id="disclaimer" class="level2">
+<h2 class="anchored" data-anchor-id="disclaimer">Disclaimer</h2>
+<ul>
+<li>This is a curated map, not a complete catalogue. There are hundreds of attention papers; I kept the ones that define a branch or that shipped in a notable model.</li>
+<li>Dates are the approximate month of the first arXiv version. Edges are my judgement of “builds on or is closely related to”, not strict citations.</li>
+</ul>
+<p>The zoo around attention keeps growing: sparse patterns, kernel tricks, SSMs, delta rules, hybrids. This page is a map of that zoo. Rows are families, the x-axis is time (first arXiv version, roughly), arrows mean <em>builds on / closely related to</em>.</p>
+<style>
+.am-controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 10px}
+.am-chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border:1px solid var(--bs-border-color,#ccc);border-radius:999px;font-size:12px;cursor:pointer;user-select:none;background:transparent;color:var(--bs-body-color,#222)}
+.am-chip i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.am-chip.off{opacity:.35}
+#am-search{margin-left:auto;padding:4px 10px;border:1px solid var(--bs-border-color,#ccc);border-radius:8px;font-size:13px;background:var(--bs-body-bg,#fff);color:var(--bs-body-color,#222);min-width:180px}
+.am-wrap{position:relative;border:1px solid var(--bs-border-color,#e0e0e0);border-radius:12px;overflow-x:auto;background:var(--bs-body-bg,#fff)}
+#am-svg{display:block;width:100%;min-width:1000px;height:auto}
+#am-svg text{fill:var(--bs-body-color,#222);font-family:inherit}
+.am-lane-label{font-size:12px;font-weight:600}
+.am-lane-sub{font-size:10.5px;opacity:.6}
+.am-year{font-size:11px;opacity:.55}
+.am-nlabel{font-size:10.5px;paint-order:stroke;stroke:var(--bs-body-bg,#fff);stroke-width:3px;stroke-linejoin:round;pointer-events:none}
+.am-tip{position:absolute;pointer-events:none;opacity:0;transition:opacity .12s;max-width:300px;padding:10px 14px;border-radius:8px;font-size:12.5px;line-height:1.5;z-index:10;background:var(--bs-body-bg,#fff);color:var(--bs-body-color,#222);border:1px solid var(--bs-border-color,#ccc);box-shadow:0 4px 14px rgba(0,0,0,.15)}
+.am-tip .t{font-weight:600;font-size:13.5px;margin-bottom:4px}
+.am-tip .t span{font-weight:400;opacity:.55;margin-left:4px}
+.am-tip .b{display:inline-block;font-size:11px;padding:1px 7px;border-radius:4px;margin:0 4px 6px 0}
+.am-tip .cx{background:#E1F5EE;color:#0F6E56}
+.am-tip .pr{background:#FAEEDA;color:#7A4B00}
+.am-tip .h{margin-top:6px;font-size:11px;opacity:.55}
+</style>
+
+<div class="am-controls" id="am-controls">
+  <input id="am-search" type="search" placeholder="search a mechanism…" autocomplete="off">
+</div>
+<div class="am-wrap" id="am-wrap">
+  <svg id="am-svg"></svg>
+  <div class="am-tip" id="am-tip"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script>
+(function () {
+const W = 1440, TOP = 56, BOTTOM = 16;
+
+const FAM = {
+  soft:   { name: "Softmax (quadratic)",           fill: "#85B7EB", stroke: "#185FA5" },
+  sparse: { name: "Sparse / local softmax",        fill: "#AFA9EC", stroke: "#534AB7" },
+  linear: { name: "Linear / kernel",               fill: "#5DCAA5", stroke: "#0F6E56" },
+  state:  { name: "Recurrent state / delta rule",  fill: "#F5C26B", stroke: "#8A5A00" },
+  hybrid: { name: "Hybrid LLMs",                   fill: "#B4B2A9", stroke: "#5F5E5A" }
+};
+
+const LANES = [
+  { label: "Full softmax attention",   sub: "the O(n²) reference",          fam: "soft",   h: 80  },
+  { label: "Cheaper exact softmax",    sub: "KV cache, IO, memory",         fam: "soft",   h: 100 },
+  { label: "Sparse / local softmax",   sub: "fewer pairs, still softmax",   fam: "sparse", h: 130 },
+  { label: "Modified softmax",         sub: "gates, sigmoid, differential", fam: "soft",   h: 120 },
+  { label: "Linear / kernel",          sub: "O(n), no n×n matrix",          fam: "linear", h: 170 },
+  { label: "Gated linear RNN / SSM",   sub: "fixed-size state + decay",     fam: "state",  h: 160 },
+  { label: "Delta rule & TTT memory",  sub: "error-correcting state writes",fam: "state",  h: 150 },
+  { label: "Hybrids in shipped LLMs",  sub: "linear layers + few full ones",fam: "hybrid", h: 140 }
+];
+
+// DATA-START
+// [id, label, date, lane, link (arXiv id or URL), cost, description, shipped-in]
+const RAW = [
+["bahdanau","Bahdanau",2014.7,0,"1409.0473","O(n·m)","Additive attention for seq2seq translation: a small MLP scores the decoder state against every encoder state; softmax gives the alignment.",""],
+["luong","Luong",2015.6,0,"1508.04025","O(n·m)","Multiplicative (dot-product) scoring plus global vs. local attention for NMT.",""],
+["transformer","MHA / SDPA",2017.45,0,"1706.03762","O(n²)","Scaled dot-product multi-head self-attention, softmax(QKᵀ/√d)V. The reference every other node is measured against.","GPT, Llama, DeepSeek, Qwen, …"],
+
+["mqa","MQA",2019.85,1,"1911.02150","O(n²), KV ÷ h","All heads share one K/V head, cutting the KV cache by the number of heads.","PaLM, Falcon"],
+["gqa","GQA",2023.35,1,"2305.13245","O(n²), KV ÷ g","Groups of query heads share a K/V head; interpolates between MHA and MQA with little quality loss.","Llama 3, Mistral, Qwen3"],
+["mla","MLA",2024.35,1,"2405.04434","O(n²), tiny KV","Multi-head Latent Attention: cache a low-rank latent instead of K/V and up-project on the fly. On par with MHA when tuned, far smaller cache.","DeepSeek V2/V3/R1, Kimi K2"],
+["flash","FlashAttention",2022.4,1,"2205.14135","O(n²) FLOPs, O(n) memory","IO-aware exact attention: tiled online softmax in SRAM, never materialises the n×n matrix. FA-2 and FA-3 improve parallelism and Hopper utilisation.","Default kernel in most stacks"],
+["paged","PagedAttention",2023.45,1,"2309.06180","memory manager","vLLM: store the KV cache in fixed-size non-contiguous blocks like OS virtual-memory pages, nearly eliminating fragmentation.","vLLM"],
+["ring","Ring Attention",2023.75,1,"2310.01889","O(n²), sequence-parallel","Shard the sequence across devices and rotate K/V blocks around a ring, overlapping communication with compute for very long contexts.",""],
+
+["sparse-t","Sparse Transformer",2019.3,2,"1904.10509","O(n√n)","Factorised strided + local patterns so each token attends to roughly √n positions.",""],
+["reformer","Reformer",2020.0,2,"2001.04451","O(n log n)","LSH attention: hash similar queries and keys into buckets and attend only within a bucket. Also reversible layers.",""],
+["longformer","Longformer",2020.3,2,"2004.05150","O(n·w)","Sliding-window attention plus a few global tokens: the template for local attention in later LLMs.",""],
+["bigbird","BigBird",2020.55,2,"2007.14062","O(n)","Window + global + random attention; shown to be a universal approximator and Turing complete.",""],
+["streaming","StreamingLLM",2023.7,2,"2309.17453","O(n·w) + sinks","Attention sinks: keep the first few tokens' KV plus a sliding window to stream indefinitely without finetuning.",""],
+["swa","Sliding window",2023.75,2,"2310.06825","O(n·w)","Local attention in a decoder LLM (Mistral 7B); stacked layers still propagate information beyond a single window.","Mistral 7B, Gemma 2/3, gpt-oss"],
+["nsa","NSA",2025.1,2,"2502.11089","sub-quadratic","Native Sparse Attention: hardware-aligned, natively trainable mix of compressed, selected and sliding-window branches.",""],
+["moba","MoBA",2025.12,2,"2502.13189","sub-quadratic","Mixture of Block Attention: MoE-style top-k routing of KV blocks for each query.",""],
+["dsa","DeepSeek Sparse",2025.7,2,"https://huggingface.co/deepseek-ai/DeepSeek-V3.2-Exp","sub-quadratic","A lightweight indexer picks the top-k tokens per query on top of MLA. Not strictly linear, but sub-quadratic.","DeepSeek V3.2-Exp"],
+
+["sigmoid","Sigmoid attn",2024.7,3,"2409.04431","O(n²)","Replaces the row-wise softmax with an element-wise sigmoid (plus a bias); matches softmax quality and allows a faster FlashSigmoid kernel.",""],
+["diff","Differential",2024.75,3,"2410.05258","O(n²)","Attention as the difference of two softmax maps, cancelling common-mode noise and sharpening focus.",""],
+["fox","Forgetting Attn",2025.15,3,"2503.02130","O(n²)","Softmax attention with a data-dependent forget gate (FoX), borrowing the decay idea from recurrent models.",""],
+["gated","Gated attention",2025.35,3,"2505.06708","O(n²)","A sigmoid gate on the attention output; reduces attention sinks and massive activations and helps stability.","Qwen3-Next (full layers)"],
+
+["lintrans","Linear Transformer",2020.5,4,"2006.16236","O(n)","Swap softmax for a kernel feature map: φ(Q)(φ(K)ᵀV) with φ(x)=elu(x)+1. The causal form is literally an RNN.",""],
+["linformer","Linformer",2020.45,4,"2006.04768","O(n)","Projects keys and values along the sequence axis to a fixed length k; awkward for causal decoding.",""],
+["performer","Performer",2020.7,4,"2009.14794","O(n)","FAVOR+: unbiased random-feature approximation of the softmax kernel.",""],
+["nystrom","Nyströmformer",2021.1,4,"2102.03902","O(n)","Nyström approximation of the softmax matrix from a small set of landmark tokens.",""],
+["rfa","RFA",2021.2,4,"2103.02143","O(n)","Random Feature Attention: random Fourier features plus a gate for causal decoding.",""],
+["aft","AFT",2021.4,4,"2105.14103","O(n)","Attention Free Transformer: element-wise gating with learned position biases instead of QKᵀ.",""],
+["cosformer","cosFormer",2022.1,4,"2202.08791","O(n)","ReLU feature map with cosine re-weighting that restores a locality bias.",""],
+["hedgehog","Hedgehog",2024.1,4,"2402.04347","O(n)","Learns feature maps that mimic softmax's spiky, monotonic weights, closing much of the quality gap.",""],
+["based","Based",2024.15,4,"2402.18668","O(n)","Taylor-expansion feature map combined with sliding-window attention; explores the recall/throughput trade-off.",""],
+
+["s4","S4",2021.85,5,"2111.00396","O(n log n) / O(n)","Structured state space: a linear time-invariant SSM with HiPPO init, run as a global convolution or a recurrence.",""],
+["rwkv","RWKV",2023.35,5,"2305.13048","O(n)","Token mixing with a learned time decay (WKV); trains in parallel like a transformer, infers as an RNN with constant state.","RWKV model family"],
+["retnet","RetNet",2023.5,5,"2307.08621","O(n)","Retention: linear attention with a fixed exponential decay; parallel, recurrent and chunkwise forms.",""],
+["hgrn","HGRN",2023.85,5,"2311.04823","O(n)","Hierarchically gated linear RNN with learnable lower bounds on the forget gate.",""],
+["gla","GLA",2023.95,5,"2312.06635","O(n)","Gated Linear Attention: a data-dependent gate on the state and a hardware-efficient chunkwise algorithm.",""],
+["mamba","Mamba",2023.95,5,"2312.00752","O(n)","Selective SSM: input-dependent step size and projections with a hardware-aware parallel scan; constant-size state.",""],
+["lightning","Lightning Attn",2024.0,5,"2401.04658","O(n)","Lightning Attention-2: IO-aware tiling of linear attention that keeps training speed constant across sequence lengths.","MiniMax-01 / M1"],
+["xlstm","xLSTM",2024.35,5,"2405.04517","O(n)","Extended LSTM with exponential gating; the mLSTM cell has a matrix memory that resembles linear attention.",""],
+["mamba2","Mamba-2",2024.4,5,"2405.21060","O(n)","State Space Duality: SSMs and masked, decayed linear attention are two views of the same thing, enabling a matmul-friendly algorithm.","Granite 4.0, Nemotron Nano 2 (hybrids)"],
+
+["fwp","Fast Weight Programmers",2021.1,6,"2102.11174","O(n)","Shows linear transformers are fast-weight memories and points out their limited capacity, motivating the delta rule.",""],
+["deltanet","DeltaNet",2024.45,6,"2406.06484","O(n)","Parallelises the delta rule over the sequence: the state is corrected by v − Sk, an error-driven write instead of a blind add.",""],
+["ttt","TTT layers",2024.5,6,"2407.04620","O(n)","Test-Time Training: the hidden state is itself a small model updated by gradient steps on a self-supervised loss.",""],
+["gdn","Gated DeltaNet",2024.95,6,"2412.06464","O(n)","Mamba-2-style decay gate α plus delta-rule update β: Mamba-2 improved with the delta rule.","Qwen3-Next, Kimi Linear (variant)"],
+["titans","Titans",2025.0,6,"2501.00663","O(n)","A deep neural long-term memory updated at test time by a surprise signal, alongside short-term attention.",""],
+["deltaproduct","DeltaProduct",2025.12,6,"2502.10297","O(n)","Several Householder-style delta steps per token for a more expressive state transition.",""],
+["rwkv7","RWKV-7",2025.2,6,"2503.14456","O(n)","'Goose': a generalised delta rule with vector-valued gating.","RWKV-7 models"],
+
+["jamba","Jamba",2024.2,7,"2403.19887","mostly O(n)","AI21: interleaves Mamba and attention layers (1:7) with MoE.","Jamba"],
+["samba","Samba",2024.45,7,"2406.07522","mostly O(n)","Microsoft: Mamba + sliding-window attention + MLP layers.",""],
+["minimax01","MiniMax-01",2025.0,7,"2501.08313","mostly O(n)","First large-scale lightning-attention LLM (456B MoE); one softmax layer per seven lightning layers.","MiniMax-01"],
+["gemma3","Gemma 3",2025.2,7,"2503.19786","local O(n·w) + global O(n²)","Five local sliding-window layers for each global layer to shrink the KV cache.","Gemma 3"],
+["m1","MiniMax-M1",2025.45,7,"2506.13585","mostly O(n)","456B MoE (46B active) reasoning model with hybrid lightning attention.","MiniMax-M1"],
+["qwen3next","Qwen3-Next",2025.7,7,"https://qwen.ai/blog?id=4074cca80393150c248e508aa62983f9cb7d27cd","mostly O(n)","3:1 mix of Gated DeltaNet and gated attention over 48 layers; 262k native context.","Qwen3-Next"],
+["kimi","Kimi Linear",2025.8,7,"2510.26692","mostly O(n)","Kimi Delta Attention (channel-wise gate, refined Gated DeltaNet) with MLA global layers at 3:1; 75% smaller KV cache and up to 6× decoding throughput reported.","Kimi Linear"],
+["m2","MiniMax-M2",2025.85,7,"https://huggingface.co/blog/MiniMax-AI/why-did-m2-end-up-as-a-full-attention-model","O(n²)","The plot twist: a 230B model that went back to full attention. The team said linear attention was tricky in production, with weaker reasoning and multi-turn accuracy.","MiniMax-M2"]
+];
+
+const EDGES = [
+["bahdanau","luong"],["bahdanau","transformer"],["luong","transformer"],
+["transformer","mqa"],["mqa","gqa"],["mqa","mla"],["gqa","mla"],["transformer","flash"],["flash","ring"],["transformer","paged"],
+["transformer","sparse-t"],["sparse-t","longformer"],["longformer","bigbird"],["transformer","reformer"],["longformer","swa"],["swa","streaming"],
+["sparse-t","nsa"],["sparse-t","moba"],["nsa","dsa"],["mla","dsa"],
+["transformer","sigmoid"],["transformer","diff"],["transformer","fox"],["transformer","gated"],
+["transformer","lintrans"],["transformer","linformer"],["lintrans","performer"],["performer","rfa"],["transformer","nystrom"],
+["lintrans","cosformer"],["lintrans","hedgehog"],["lintrans","based"],["transformer","aft"],
+["aft","rwkv"],["lintrans","retnet"],["retnet","gla"],["lintrans","gla"],["lintrans","hgrn"],["s4","mamba"],["mamba","mamba2"],
+["lintrans","mamba2"],["lintrans","lightning"],["lintrans","xlstm"],
+["lintrans","fwp"],["fwp","deltanet"],["fwp","ttt"],["ttt","titans"],["deltanet","gdn"],["gla","gdn"],["mamba2","gdn"],
+["deltanet","deltaproduct"],["deltanet","rwkv7"],["rwkv","rwkv7"],
+["lightning","minimax01"],["minimax01","m1"],["m1","m2"],["gdn","qwen3next"],["gated","qwen3next"],["gdn","kimi"],["mla","kimi"],
+["mamba","jamba"],["transformer","jamba"],["mamba","samba"],["swa","samba"],["swa","gemma3"],["transformer","gemma3"]
+];
+// DATA-END
+
+// LAYOUT-START
+const BIG = { transformer: 22, lintrans: 17, mla: 15, flash: 15, mamba: 16, gdn: 17, gqa: 13, mamba2: 14, deltanet: 14, swa: 13, gla: 13 };
+function buildNodes() {
+  return RAW.map((r, i) => {
+    const n = { id: r[0], label: r[1], date: r[2], lane: r[3],
+      link: r[4].startsWith("http") ? r[4] : "https://arxiv.org/abs/" + r[4],
+      cx: r[5], desc: r[6], prod: r[7], i };
+    n.r = BIG[n.id] || 11;
+    n.cr = Math.max(n.r + 5, n.label.length * 2.6);
+    n.fam = LANES[n.lane].fam;
+    return n;
+  });
+}
+const X = d3.scaleLinear()
+  .domain([2014, 2017, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026])
+  .range ([ 210,  290,  360,  450,  540,  620,  720,  860, 1030, 1380]);
+const laneTop = [], laneBot = [], laneMid = [];
+(function () { let y = TOP; LANES.forEach((l, i) => { laneTop[i] = y; laneBot[i] = y + l.h; laneMid[i] = y + l.h / 2; y += l.h; }); })();
+const H = laneBot[LANES.length - 1] + BOTTOM;
+
+function boxOf(n) {
+  const w = Math.max(2 * n.r + (n.prod ? 8 : 0), n.label.length * 5.8) + 16;
+  return { x0: n.x - w / 2, x1: n.x + w / 2, y0: n.y - n.r - (n.prod ? 4 : 0) - 3, y1: n.y + n.r + 21 };
+}
+function rectForce(nodes) {
+  for (let i = 0; i < nodes.length; i++) for (let j = i + 1; j < nodes.length; j++) {
+    const a = nodes[i], b = nodes[j], A = boxOf(a), B = boxOf(b);
+    const ox = Math.min(A.x1, B.x1) - Math.max(A.x0, B.x0);
+    const oy = Math.min(A.y1, B.y1) - Math.max(A.y0, B.y0);
+    if (ox <= 0 || oy <= 0) continue;
+    if (oy <= ox * 0.8) { const s = (a.y <= b.y ? -1 : 1) * oy / 2; a.y += s; b.y -= s; }
+    else { const s = (a.x <= b.x ? -1 : 1) * ox / 2; a.x += s; b.x -= s; }
+  }
+}
+function runLayout(nodes) {
+  nodes.forEach((n, i) => { n.x = X(n.date); n.y = laneMid[n.lane] + ((i * 37) % 11 - 5) * 3; });
+  for (let k = 0; k < 1500; k++) {
+    nodes.forEach(n => {
+      n.x += (X(n.date) - n.x) * 0.025;
+      n.y += (laneMid[n.lane] - n.y) * 0.03;
+    });
+    rectForce(nodes);
+    nodes.forEach(n => {
+      n.y = Math.max(laneTop[n.lane] + n.r + 6, Math.min(laneBot[n.lane] - n.r - 22, n.y));
+      n.x = Math.max(n.r + 10, Math.min(W - 60, n.x));
+    });
+  }
+  // final pass without springs: settle any residual overlaps
+  for (let k = 0; k < 1500; k++) {
+    rectForce(nodes);
+    nodes.forEach(n => {
+      n.y = Math.max(laneTop[n.lane] + n.r + 6, Math.min(laneBot[n.lane] - n.r - 22, n.y));
+      n.x = Math.max(n.r + 10, Math.min(W - 60, n.x));
+    });
+  }
+}
+// LAYOUT-END
+
+if (typeof document === "undefined") { return; }
+
+const nodes = buildNodes();
+const byId = Object.fromEntries(nodes.map(n => [n.id, n]));
+const links = EDGES.map(([s, t]) => ({ s: byId[s], t: byId[t] }));
+const adj = Object.fromEntries(nodes.map(n => [n.id, new Set([n.id])]));
+EDGES.forEach(([s, t]) => { adj[s].add(t); adj[t].add(s); });
+runLayout(nodes);
+
+const svg = d3.select("#am-svg").attr("viewBox", `0 0 ${W} ${H}`);
+const defs = svg.append("defs");
+[["am-arrow", "#8a8a8a"], ["am-arrow-hi", "#0F6E56"]].forEach(([id, c]) => {
+  defs.append("marker").attr("id", id).attr("viewBox", "0 0 10 10").attr("refX", 9).attr("refY", 5)
+    .attr("markerWidth", 6).attr("markerHeight", 6).attr("orient", "auto")
+    .append("path").attr("d", "M0,0 L10,5 L0,10 z").attr("fill", c);
+});
+
+// lane bands + labels
+const bands = svg.append("g");
+LANES.forEach((l, i) => {
+  bands.append("rect").attr("x", 0).attr("y", laneTop[i]).attr("width", W).attr("height", l.h)
+    .attr("fill", FAM[l.fam].fill).attr("opacity", 0.09);
+  bands.append("line").attr("x1", 0).attr("x2", W).attr("y1", laneTop[i]).attr("y2", laneTop[i])
+    .attr("stroke", "currentColor").attr("opacity", 0.1);
+  bands.append("text").attr("class", "am-lane-label").attr("x", 14).attr("y", laneMid[i] - 3).text(l.label);
+  bands.append("text").attr("class", "am-lane-sub").attr("x", 14).attr("y", laneMid[i] + 12).text(l.sub);
+});
+// year grid
+const ticks = [2014, 2017, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
+const grid = svg.append("g");
+ticks.forEach(yr => {
+  grid.append("line").attr("x1", X(yr)).attr("x2", X(yr)).attr("y1", TOP - 8).attr("y2", H - BOTTOM)
+    .attr("stroke", "currentColor").attr("opacity", 0.1).attr("stroke-dasharray", "2 4");
+  grid.append("text").attr("class", "am-year").attr("x", X(yr)).attr("y", TOP - 16).attr("text-anchor", "middle").text(yr);
+});
+
+const linkSel = svg.append("g").selectAll("line").data(links).join("line")
+  .attr("stroke", "#8a8a8a").attr("stroke-width", 1).attr("marker-end", "url(#am-arrow)");
+
+const nodeSel = svg.append("g").selectAll("g").data(nodes).join("g").style("cursor", "pointer");
+nodeSel.append("circle").attr("r", d => d.r).attr("fill", d => FAM[d.fam].fill)
+  .attr("stroke", d => FAM[d.fam].stroke).attr("stroke-width", 1.5);
+nodeSel.filter(d => d.prod).append("circle").attr("r", d => d.r + 4).attr("fill", "none")
+  .attr("stroke", d => FAM[d.fam].stroke).attr("stroke-width", 1.5).attr("stroke-dasharray", "3 2");
+nodeSel.append("text").attr("class", "am-nlabel").attr("text-anchor", "middle")
+  .attr("y", d => d.r + 14).text(d => d.label);
+
+function draw() {
+  linkSel.each(function (d) {
+    const dx = d.t.x - d.s.x, dy = d.t.y - d.s.y, len = Math.hypot(dx, dy) || 1;
+    const ux = dx / len, uy = dy / len;
+    const sr = d.s.r + (d.s.prod ? 5 : 1), tr = d.t.r + (d.t.prod ? 6 : 2);
+    d3.select(this).attr("x1", d.s.x + ux * sr).attr("y1", d.s.y + uy * sr)
+      .attr("x2", d.t.x - ux * tr).attr("y2", d.t.y - uy * tr);
+  });
+  nodeSel.attr("transform", d => `translate(${d.x},${d.y})`);
+}
+draw();
+
+// ---------- interaction ----------
+const activeFam = new Set(Object.keys(FAM));
+let hoverId = null, query = "";
+const visible = d => activeFam.has(d.fam) && (!query || d.label.toLowerCase().includes(query) || d.id.includes(query));
+
+function refresh() {
+  nodeSel.attr("opacity", d => hoverId ? (adj[hoverId].has(d.id) ? 1 : 0.12) : (visible(d) ? 1 : 0.1));
+  linkSel
+    .attr("stroke-opacity", d => hoverId ? ((d.s.id === hoverId || d.t.id === hoverId) ? 0.95 : 0.04)
+      : (visible(d.s) && visible(d.t) ? 0.28 : 0.04))
+    .attr("stroke", d => hoverId && (d.s.id === hoverId || d.t.id === hoverId) ? "#0F6E56" : "#8a8a8a")
+    .attr("stroke-width", d => hoverId && (d.s.id === hoverId || d.t.id === hoverId) ? 1.8 : 1)
+    .attr("marker-end", d => hoverId && (d.s.id === hoverId || d.t.id === hoverId) ? "url(#am-arrow-hi)" : "url(#am-arrow)");
+}
+refresh();
+
+const wrap = document.getElementById("am-wrap");
+const tip = document.getElementById("am-tip");
+nodeSel
+  .on("mouseenter", (e, d) => {
+    hoverId = d.id; refresh();
+    tip.innerHTML =
+      `<div class="t">${d.label}<span>${Math.floor(d.date)}</span></div>` +
+      `<span class="b cx">${d.cx}</span>` +
+      (d.prod ? `<span class="b pr">in: ${d.prod}</span>` : "") +
+      `<div>${d.desc}</div><div class="h">click to open ${d.link.includes("arxiv.org") ? "arXiv" : "source"}</div>`;
+    tip.style.opacity = 1;
+  })
+  .on("mousemove", e => {
+    const box = wrap.getBoundingClientRect();
+    let x = e.clientX - box.left + wrap.scrollLeft + 14, y = e.clientY - box.top + 14;
+    if (x + 310 > wrap.scrollLeft + box.width) x -= 330;
+    if (y + 170 > box.height) y -= 170;
+    tip.style.left = x + "px"; tip.style.top = y + "px";
+  })
+  .on("mouseleave", () => { hoverId = null; refresh(); tip.style.opacity = 0; })
+  .on("click", (e, d) => { window.open(d.link, "_blank", "noopener"); })
+  .call(d3.drag()
+    .on("drag", (e, d) => { d.x = e.x; d.y = e.y; draw(); }));
+
+// legend / filter chips
+const ctr = document.getElementById("am-controls");
+const search = document.getElementById("am-search");
+Object.entries(FAM).forEach(([k, f]) => {
+  const c = document.createElement("span");
+  c.className = "am-chip";
+  c.innerHTML = `<i style="background:${f.fill};border:1.5px solid ${f.stroke}"></i>${f.name}`;
+  c.onclick = () => { activeFam.has(k) ? activeFam.delete(k) : activeFam.add(k); c.classList.toggle("off", !activeFam.has(k)); refresh(); };
+  ctr.insertBefore(c, search);
+});
+search.addEventListener("input", () => { query = search.value.trim().toLowerCase(); refresh(); });
+})();
+</script>
+</section>
+<section id="cheat-sheet" class="level2">
+<h2 class="anchored" data-anchor-id="cheat-sheet">Cheat-sheet</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Family</th>
+<th>Cost in sequence length <em>n</em></th>
+<th>What the model carries at inference</th>
+<th>Representative nodes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Full softmax</td>
+<td>O(n²) compute</td>
+<td>KV cache grows linearly with <em>n</em></td>
+<td>MHA, MQA/GQA, MLA, FlashAttention</td>
+</tr>
+<tr class="even">
+<td>Sparse / local softmax</td>
+<td>O(n·w) to sub-quadratic</td>
+<td>KV cache (windowed or top-k selected)</td>
+<td>Sliding window, BigBird, NSA, DeepSeek Sparse</td>
+</tr>
+<tr class="odd">
+<td>Linear / kernel</td>
+<td>O(n)</td>
+<td>one d×d matrix per head</td>
+<td>Linear Transformer, Performer, Based</td>
+</tr>
+<tr class="even">
+<td>Gated recurrent / SSM</td>
+<td>O(n)</td>
+<td>fixed-size state, decayed over time</td>
+<td>RetNet, GLA, Mamba-2, Lightning</td>
+</tr>
+<tr class="odd">
+<td>Delta rule / TTT</td>
+<td>O(n)</td>
+<td>fixed-size state, error-corrected writes</td>
+<td>DeltaNet, Gated DeltaNet, Titans</td>
+</tr>
+<tr class="even">
+<td>Hybrids</td>
+<td>mostly O(n), a few O(n²) layers</td>
+<td>small state plus a small KV cache</td>
+<td>Qwen3-Next, Kimi Linear, MiniMax-M1</td>
+</tr>
+</tbody>
+</table>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/your-website-url\.example\.com");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

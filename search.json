@@ -1,0 +1,37 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Notes and posts",
+    "section": "",
+    "text": "Attention Evolution\n\n\nAn interactive family tree of attention variants\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "posts/attention-evolution/index.html",
+    "href": "posts/attention-evolution/index.html",
+    "title": "A map of major attention mechanisms",
+    "section": "",
+    "text": "This is a curated map, not a complete catalogue. There are hundreds of attention papers; I kept the ones that define a branch or that shipped in a notable model.\nDates are the approximate month of the first arXiv version. Edges are my judgement of “builds on or is closely related to”, not strict citations.\n\nThe zoo around attention keeps growing: sparse patterns, kernel tricks, SSMs, delta rules, hybrids. This page is a map of that zoo. Rows are families, the x-axis is time (first arXiv version, roughly), arrows mean builds on / closely related to."
+  },
+  {
+    "objectID": "posts/attention-evolution/index.html#disclaimer",
+    "href": "posts/attention-evolution/index.html#disclaimer",
+    "title": "A map of major attention mechanisms",
+    "section": "",
+    "text": "This is a curated map, not a complete catalogue. There are hundreds of attention papers; I kept the ones that define a branch or that shipped in a notable model.\nDates are the approximate month of the first arXiv version. Edges are my judgement of “builds on or is closely related to”, not strict citations.\n\nThe zoo around attention keeps growing: sparse patterns, kernel tricks, SSMs, delta rules, hybrids. This page is a map of that zoo. Rows are families, the x-axis is time (first arXiv version, roughly), arrows mean builds on / closely related to."
+  },
+  {
+    "objectID": "posts/attention-evolution/index.html#cheat-sheet",
+    "href": "posts/attention-evolution/index.html#cheat-sheet",
+    "title": "A map of major attention mechanisms",
+    "section": "Cheat-sheet",
+    "text": "Cheat-sheet\n\n\n\n\n\n\n\n\n\nFamily\nCost in sequence length n\nWhat the model carries at inference\nRepresentative nodes\n\n\n\n\nFull softmax\nO(n²) compute\nKV cache grows linearly with n\nMHA, MQA/GQA, MLA, FlashAttention\n\n\nSparse / local softmax\nO(n·w) to sub-quadratic\nKV cache (windowed or top-k selected)\nSliding window, BigBird, NSA, DeepSeek Sparse\n\n\nLinear / kernel\nO(n)\none d×d matrix per head\nLinear Transformer, Performer, Based\n\n\nGated recurrent / SSM\nO(n)\nfixed-size state, decayed over time\nRetNet, GLA, Mamba-2, Lightning\n\n\nDelta rule / TTT\nO(n)\nfixed-size state, error-corrected writes\nDeltaNet, Gated DeltaNet, Titans\n\n\nHybrids\nmostly O(n), a few O(n²) layers\nsmall state plus a small KV cache\nQwen3-Next, Kimi Linear, MiniMax-M1"
+  },
+  {
+    "objectID": "posts/about.html",
+    "href": "posts/about.html",
+    "title": "About",
+    "section": "",
+    "text": "ML engineer at Wildberries. Graduated from Yandex School of Data Analysis and DGAP.\nPreviously at Sber AI, working on generative design.\nInterested in reinforcement learning, LLM training, and the math behind modern AI systems.\nThis blog is where I write about things I find interesting enough."
+  }
+]
