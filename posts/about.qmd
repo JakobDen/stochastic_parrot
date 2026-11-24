@@ -1,0 +1,21 @@
+---
+title: "About"
+image: ../images/profile.png
+about:
+  template: jolla
+  links:
+    - icon: github
+      text: GitHub
+      href: https://github.com/JakobDen
+    - icon: linkedin
+      text: LinkedIn
+      href: https://linkedin.com/in/sincerelyjacob
+---
+
+ML engineer at Wildberries. Graduated from Yandex School of Data Analysis and DGAP.
+
+Previously at Sber AI, working on generative design.
+
+Interested in reinforcement learning, LLM training, and the math behind modern AI systems.
+
+This blog is where I write about things I find interesting enough.

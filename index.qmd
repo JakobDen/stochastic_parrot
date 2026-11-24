@@ -1,0 +1,14 @@
+---
+title: "Notes and posts"
+page-layout: full
+listing:
+  id: main-cards
+  contents: sections.yml
+  type: grid
+  grid-columns: 3
+  image-height: 200px
+  fields: [image, title, description]
+---
+
+::: {#main-cards}
+:::

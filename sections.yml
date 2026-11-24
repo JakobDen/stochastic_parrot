@@ -1,0 +1,4 @@
+- title: "Attention Evolution"
+  path: posts/attention-evolution/index.qmd
+  image: images/attention-evolution/lifetree.jpg
+  description: "An interactive family tree of attention variants"

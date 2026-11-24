@@ -1,0 +1,335 @@
+---
+title: "A map of major attention mechanisms"
+subtitle: "An attempt to grasp them all"
+date: 2026-11-24
+categories: [attention, architectures]
+page-layout: full
+---
+## Disclaimer
+
+- This is a curated map, not a complete catalogue. There are hundreds of attention papers; I kept the ones that define a branch or that shipped in a notable model.
+- Dates are the approximate month of the first arXiv version. Edges are my judgement of "builds on or is closely related to", not strict citations.
+
+The zoo around attention keeps growing: sparse patterns, kernel tricks, SSMs, delta rules, hybrids. This page is a map of that zoo. Rows are families, the x-axis is time (first arXiv version, roughly), arrows mean *builds on / closely related to*.
+
+```{=html}
+<style>
+.am-controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 10px}
+.am-chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border:1px solid var(--bs-border-color,#ccc);border-radius:999px;font-size:12px;cursor:pointer;user-select:none;background:transparent;color:var(--bs-body-color,#222)}
+.am-chip i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.am-chip.off{opacity:.35}
+#am-search{margin-left:auto;padding:4px 10px;border:1px solid var(--bs-border-color,#ccc);border-radius:8px;font-size:13px;background:var(--bs-body-bg,#fff);color:var(--bs-body-color,#222);min-width:180px}
+.am-wrap{position:relative;border:1px solid var(--bs-border-color,#e0e0e0);border-radius:12px;overflow-x:auto;background:var(--bs-body-bg,#fff)}
+#am-svg{display:block;width:100%;min-width:1000px;height:auto}
+#am-svg text{fill:var(--bs-body-color,#222);font-family:inherit}
+.am-lane-label{font-size:12px;font-weight:600}
+.am-lane-sub{font-size:10.5px;opacity:.6}
+.am-year{font-size:11px;opacity:.55}
+.am-nlabel{font-size:10.5px;paint-order:stroke;stroke:var(--bs-body-bg,#fff);stroke-width:3px;stroke-linejoin:round;pointer-events:none}
+.am-tip{position:absolute;pointer-events:none;opacity:0;transition:opacity .12s;max-width:300px;padding:10px 14px;border-radius:8px;font-size:12.5px;line-height:1.5;z-index:10;background:var(--bs-body-bg,#fff);color:var(--bs-body-color,#222);border:1px solid var(--bs-border-color,#ccc);box-shadow:0 4px 14px rgba(0,0,0,.15)}
+.am-tip .t{font-weight:600;font-size:13.5px;margin-bottom:4px}
+.am-tip .t span{font-weight:400;opacity:.55;margin-left:4px}
+.am-tip .b{display:inline-block;font-size:11px;padding:1px 7px;border-radius:4px;margin:0 4px 6px 0}
+.am-tip .cx{background:#E1F5EE;color:#0F6E56}
+.am-tip .pr{background:#FAEEDA;color:#7A4B00}
+.am-tip .h{margin-top:6px;font-size:11px;opacity:.55}
+</style>
+
+<div class="am-controls" id="am-controls">
+  <input id="am-search" type="search" placeholder="search a mechanism…" autocomplete="off">
+</div>
+<div class="am-wrap" id="am-wrap">
+  <svg id="am-svg"></svg>
+  <div class="am-tip" id="am-tip"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script>
+(function () {
+const W = 1440, TOP = 56, BOTTOM = 16;
+
+const FAM = {
+  soft:   { name: "Softmax (quadratic)",           fill: "#85B7EB", stroke: "#185FA5" },
+  sparse: { name: "Sparse / local softmax",        fill: "#AFA9EC", stroke: "#534AB7" },
+  linear: { name: "Linear / kernel",               fill: "#5DCAA5", stroke: "#0F6E56" },
+  state:  { name: "Recurrent state / delta rule",  fill: "#F5C26B", stroke: "#8A5A00" },
+  hybrid: { name: "Hybrid LLMs",                   fill: "#B4B2A9", stroke: "#5F5E5A" }
+};
+
+const LANES = [
+  { label: "Full softmax attention",   sub: "the O(n²) reference",          fam: "soft",   h: 80  },
+  { label: "Cheaper exact softmax",    sub: "KV cache, IO, memory",         fam: "soft",   h: 100 },
+  { label: "Sparse / local softmax",   sub: "fewer pairs, still softmax",   fam: "sparse", h: 130 },
+  { label: "Modified softmax",         sub: "gates, sigmoid, differential", fam: "soft",   h: 120 },
+  { label: "Linear / kernel",          sub: "O(n), no n×n matrix",          fam: "linear", h: 170 },
+  { label: "Gated linear RNN / SSM",   sub: "fixed-size state + decay",     fam: "state",  h: 160 },
+  { label: "Delta rule & TTT memory",  sub: "error-correcting state writes",fam: "state",  h: 150 },
+  { label: "Hybrids in shipped LLMs",  sub: "linear layers + few full ones",fam: "hybrid", h: 140 }
+];
+
+// DATA-START
+// [id, label, date, lane, link (arXiv id or URL), cost, description, shipped-in]
+const RAW = [
+["bahdanau","Bahdanau",2014.7,0,"1409.0473","O(n·m)","Additive attention for seq2seq translation: a small MLP scores the decoder state against every encoder state; softmax gives the alignment.",""],
+["luong","Luong",2015.6,0,"1508.04025","O(n·m)","Multiplicative (dot-product) scoring plus global vs. local attention for NMT.",""],
+["transformer","MHA / SDPA",2017.45,0,"1706.03762","O(n²)","Scaled dot-product multi-head self-attention, softmax(QKᵀ/√d)V. The reference every other node is measured against.","GPT, Llama, DeepSeek, Qwen, …"],
+
+["mqa","MQA",2019.85,1,"1911.02150","O(n²), KV ÷ h","All heads share one K/V head, cutting the KV cache by the number of heads.","PaLM, Falcon"],
+["gqa","GQA",2023.35,1,"2305.13245","O(n²), KV ÷ g","Groups of query heads share a K/V head; interpolates between MHA and MQA with little quality loss.","Llama 3, Mistral, Qwen3"],
+["mla","MLA",2024.35,1,"2405.04434","O(n²), tiny KV","Multi-head Latent Attention: cache a low-rank latent instead of K/V and up-project on the fly. On par with MHA when tuned, far smaller cache.","DeepSeek V2/V3/R1, Kimi K2"],
+["flash","FlashAttention",2022.4,1,"2205.14135","O(n²) FLOPs, O(n) memory","IO-aware exact attention: tiled online softmax in SRAM, never materialises the n×n matrix. FA-2 and FA-3 improve parallelism and Hopper utilisation.","Default kernel in most stacks"],
+["paged","PagedAttention",2023.45,1,"2309.06180","memory manager","vLLM: store the KV cache in fixed-size non-contiguous blocks like OS virtual-memory pages, nearly eliminating fragmentation.","vLLM"],
+["ring","Ring Attention",2023.75,1,"2310.01889","O(n²), sequence-parallel","Shard the sequence across devices and rotate K/V blocks around a ring, overlapping communication with compute for very long contexts.",""],
+
+["sparse-t","Sparse Transformer",2019.3,2,"1904.10509","O(n√n)","Factorised strided + local patterns so each token attends to roughly √n positions.",""],
+["reformer","Reformer",2020.0,2,"2001.04451","O(n log n)","LSH attention: hash similar queries and keys into buckets and attend only within a bucket. Also reversible layers.",""],
+["longformer","Longformer",2020.3,2,"2004.05150","O(n·w)","Sliding-window attention plus a few global tokens: the template for local attention in later LLMs.",""],
+["bigbird","BigBird",2020.55,2,"2007.14062","O(n)","Window + global + random attention; shown to be a universal approximator and Turing complete.",""],
+["streaming","StreamingLLM",2023.7,2,"2309.17453","O(n·w) + sinks","Attention sinks: keep the first few tokens' KV plus a sliding window to stream indefinitely without finetuning.",""],
+["swa","Sliding window",2023.75,2,"2310.06825","O(n·w)","Local attention in a decoder LLM (Mistral 7B); stacked layers still propagate information beyond a single window.","Mistral 7B, Gemma 2/3, gpt-oss"],
+["nsa","NSA",2025.1,2,"2502.11089","sub-quadratic","Native Sparse Attention: hardware-aligned, natively trainable mix of compressed, selected and sliding-window branches.",""],
+["moba","MoBA",2025.12,2,"2502.13189","sub-quadratic","Mixture of Block Attention: MoE-style top-k routing of KV blocks for each query.",""],
+["dsa","DeepSeek Sparse",2025.7,2,"https://huggingface.co/deepseek-ai/DeepSeek-V3.2-Exp","sub-quadratic","A lightweight indexer picks the top-k tokens per query on top of MLA. Not strictly linear, but sub-quadratic.","DeepSeek V3.2-Exp"],
+
+["sigmoid","Sigmoid attn",2024.7,3,"2409.04431","O(n²)","Replaces the row-wise softmax with an element-wise sigmoid (plus a bias); matches softmax quality and allows a faster FlashSigmoid kernel.",""],
+["diff","Differential",2024.75,3,"2410.05258","O(n²)","Attention as the difference of two softmax maps, cancelling common-mode noise and sharpening focus.",""],
+["fox","Forgetting Attn",2025.15,3,"2503.02130","O(n²)","Softmax attention with a data-dependent forget gate (FoX), borrowing the decay idea from recurrent models.",""],
+["gated","Gated attention",2025.35,3,"2505.06708","O(n²)","A sigmoid gate on the attention output; reduces attention sinks and massive activations and helps stability.","Qwen3-Next (full layers)"],
+
+["lintrans","Linear Transformer",2020.5,4,"2006.16236","O(n)","Swap softmax for a kernel feature map: φ(Q)(φ(K)ᵀV) with φ(x)=elu(x)+1. The causal form is literally an RNN.",""],
+["linformer","Linformer",2020.45,4,"2006.04768","O(n)","Projects keys and values along the sequence axis to a fixed length k; awkward for causal decoding.",""],
+["performer","Performer",2020.7,4,"2009.14794","O(n)","FAVOR+: unbiased random-feature approximation of the softmax kernel.",""],
+["nystrom","Nyströmformer",2021.1,4,"2102.03902","O(n)","Nyström approximation of the softmax matrix from a small set of landmark tokens.",""],
+["rfa","RFA",2021.2,4,"2103.02143","O(n)","Random Feature Attention: random Fourier features plus a gate for causal decoding.",""],
+["aft","AFT",2021.4,4,"2105.14103","O(n)","Attention Free Transformer: element-wise gating with learned position biases instead of QKᵀ.",""],
+["cosformer","cosFormer",2022.1,4,"2202.08791","O(n)","ReLU feature map with cosine re-weighting that restores a locality bias.",""],
+["hedgehog","Hedgehog",2024.1,4,"2402.04347","O(n)","Learns feature maps that mimic softmax's spiky, monotonic weights, closing much of the quality gap.",""],
+["based","Based",2024.15,4,"2402.18668","O(n)","Taylor-expansion feature map combined with sliding-window attention; explores the recall/throughput trade-off.",""],
+
+["s4","S4",2021.85,5,"2111.00396","O(n log n) / O(n)","Structured state space: a linear time-invariant SSM with HiPPO init, run as a global convolution or a recurrence.",""],
+["rwkv","RWKV",2023.35,5,"2305.13048","O(n)","Token mixing with a learned time decay (WKV); trains in parallel like a transformer, infers as an RNN with constant state.","RWKV model family"],
+["retnet","RetNet",2023.5,5,"2307.08621","O(n)","Retention: linear attention with a fixed exponential decay; parallel, recurrent and chunkwise forms.",""],
+["hgrn","HGRN",2023.85,5,"2311.04823","O(n)","Hierarchically gated linear RNN with learnable lower bounds on the forget gate.",""],
+["gla","GLA",2023.95,5,"2312.06635","O(n)","Gated Linear Attention: a data-dependent gate on the state and a hardware-efficient chunkwise algorithm.",""],
+["mamba","Mamba",2023.95,5,"2312.00752","O(n)","Selective SSM: input-dependent step size and projections with a hardware-aware parallel scan; constant-size state.",""],
+["lightning","Lightning Attn",2024.0,5,"2401.04658","O(n)","Lightning Attention-2: IO-aware tiling of linear attention that keeps training speed constant across sequence lengths.","MiniMax-01 / M1"],
+["xlstm","xLSTM",2024.35,5,"2405.04517","O(n)","Extended LSTM with exponential gating; the mLSTM cell has a matrix memory that resembles linear attention.",""],
+["mamba2","Mamba-2",2024.4,5,"2405.21060","O(n)","State Space Duality: SSMs and masked, decayed linear attention are two views of the same thing, enabling a matmul-friendly algorithm.","Granite 4.0, Nemotron Nano 2 (hybrids)"],
+
+["fwp","Fast Weight Programmers",2021.1,6,"2102.11174","O(n)","Shows linear transformers are fast-weight memories and points out their limited capacity, motivating the delta rule.",""],
+["deltanet","DeltaNet",2024.45,6,"2406.06484","O(n)","Parallelises the delta rule over the sequence: the state is corrected by v − Sk, an error-driven write instead of a blind add.",""],
+["ttt","TTT layers",2024.5,6,"2407.04620","O(n)","Test-Time Training: the hidden state is itself a small model updated by gradient steps on a self-supervised loss.",""],
+["gdn","Gated DeltaNet",2024.95,6,"2412.06464","O(n)","Mamba-2-style decay gate α plus delta-rule update β: Mamba-2 improved with the delta rule.","Qwen3-Next, Kimi Linear (variant)"],
+["titans","Titans",2025.0,6,"2501.00663","O(n)","A deep neural long-term memory updated at test time by a surprise signal, alongside short-term attention.",""],
+["deltaproduct","DeltaProduct",2025.12,6,"2502.10297","O(n)","Several Householder-style delta steps per token for a more expressive state transition.",""],
+["rwkv7","RWKV-7",2025.2,6,"2503.14456","O(n)","'Goose': a generalised delta rule with vector-valued gating.","RWKV-7 models"],
+
+["jamba","Jamba",2024.2,7,"2403.19887","mostly O(n)","AI21: interleaves Mamba and attention layers (1:7) with MoE.","Jamba"],
+["samba","Samba",2024.45,7,"2406.07522","mostly O(n)","Microsoft: Mamba + sliding-window attention + MLP layers.",""],
+["minimax01","MiniMax-01",2025.0,7,"2501.08313","mostly O(n)","First large-scale lightning-attention LLM (456B MoE); one softmax layer per seven lightning layers.","MiniMax-01"],
+["gemma3","Gemma 3",2025.2,7,"2503.19786","local O(n·w) + global O(n²)","Five local sliding-window layers for each global layer to shrink the KV cache.","Gemma 3"],
+["m1","MiniMax-M1",2025.45,7,"2506.13585","mostly O(n)","456B MoE (46B active) reasoning model with hybrid lightning attention.","MiniMax-M1"],
+["qwen3next","Qwen3-Next",2025.7,7,"https://qwen.ai/blog?id=4074cca80393150c248e508aa62983f9cb7d27cd","mostly O(n)","3:1 mix of Gated DeltaNet and gated attention over 48 layers; 262k native context.","Qwen3-Next"],
+["kimi","Kimi Linear",2025.8,7,"2510.26692","mostly O(n)","Kimi Delta Attention (channel-wise gate, refined Gated DeltaNet) with MLA global layers at 3:1; 75% smaller KV cache and up to 6× decoding throughput reported.","Kimi Linear"],
+["m2","MiniMax-M2",2025.85,7,"https://huggingface.co/blog/MiniMax-AI/why-did-m2-end-up-as-a-full-attention-model","O(n²)","The plot twist: a 230B model that went back to full attention. The team said linear attention was tricky in production, with weaker reasoning and multi-turn accuracy.","MiniMax-M2"]
+];
+
+const EDGES = [
+["bahdanau","luong"],["bahdanau","transformer"],["luong","transformer"],
+["transformer","mqa"],["mqa","gqa"],["mqa","mla"],["gqa","mla"],["transformer","flash"],["flash","ring"],["transformer","paged"],
+["transformer","sparse-t"],["sparse-t","longformer"],["longformer","bigbird"],["transformer","reformer"],["longformer","swa"],["swa","streaming"],
+["sparse-t","nsa"],["sparse-t","moba"],["nsa","dsa"],["mla","dsa"],
+["transformer","sigmoid"],["transformer","diff"],["transformer","fox"],["transformer","gated"],
+["transformer","lintrans"],["transformer","linformer"],["lintrans","performer"],["performer","rfa"],["transformer","nystrom"],
+["lintrans","cosformer"],["lintrans","hedgehog"],["lintrans","based"],["transformer","aft"],
+["aft","rwkv"],["lintrans","retnet"],["retnet","gla"],["lintrans","gla"],["lintrans","hgrn"],["s4","mamba"],["mamba","mamba2"],
+["lintrans","mamba2"],["lintrans","lightning"],["lintrans","xlstm"],
+["lintrans","fwp"],["fwp","deltanet"],["fwp","ttt"],["ttt","titans"],["deltanet","gdn"],["gla","gdn"],["mamba2","gdn"],
+["deltanet","deltaproduct"],["deltanet","rwkv7"],["rwkv","rwkv7"],
+["lightning","minimax01"],["minimax01","m1"],["m1","m2"],["gdn","qwen3next"],["gated","qwen3next"],["gdn","kimi"],["mla","kimi"],
+["mamba","jamba"],["transformer","jamba"],["mamba","samba"],["swa","samba"],["swa","gemma3"],["transformer","gemma3"]
+];
+// DATA-END
+
+// LAYOUT-START
+const BIG = { transformer: 22, lintrans: 17, mla: 15, flash: 15, mamba: 16, gdn: 17, gqa: 13, mamba2: 14, deltanet: 14, swa: 13, gla: 13 };
+function buildNodes() {
+  return RAW.map((r, i) => {
+    const n = { id: r[0], label: r[1], date: r[2], lane: r[3],
+      link: r[4].startsWith("http") ? r[4] : "https://arxiv.org/abs/" + r[4],
+      cx: r[5], desc: r[6], prod: r[7], i };
+    n.r = BIG[n.id] || 11;
+    n.cr = Math.max(n.r + 5, n.label.length * 2.6);
+    n.fam = LANES[n.lane].fam;
+    return n;
+  });
+}
+const X = d3.scaleLinear()
+  .domain([2014, 2017, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026])
+  .range ([ 210,  290,  360,  450,  540,  620,  720,  860, 1030, 1380]);
+const laneTop = [], laneBot = [], laneMid = [];
+(function () { let y = TOP; LANES.forEach((l, i) => { laneTop[i] = y; laneBot[i] = y + l.h; laneMid[i] = y + l.h / 2; y += l.h; }); })();
+const H = laneBot[LANES.length - 1] + BOTTOM;
+
+function boxOf(n) {
+  const w = Math.max(2 * n.r + (n.prod ? 8 : 0), n.label.length * 5.8) + 16;
+  return { x0: n.x - w / 2, x1: n.x + w / 2, y0: n.y - n.r - (n.prod ? 4 : 0) - 3, y1: n.y + n.r + 21 };
+}
+function rectForce(nodes) {
+  for (let i = 0; i < nodes.length; i++) for (let j = i + 1; j < nodes.length; j++) {
+    const a = nodes[i], b = nodes[j], A = boxOf(a), B = boxOf(b);
+    const ox = Math.min(A.x1, B.x1) - Math.max(A.x0, B.x0);
+    const oy = Math.min(A.y1, B.y1) - Math.max(A.y0, B.y0);
+    if (ox <= 0 || oy <= 0) continue;
+    if (oy <= ox * 0.8) { const s = (a.y <= b.y ? -1 : 1) * oy / 2; a.y += s; b.y -= s; }
+    else { const s = (a.x <= b.x ? -1 : 1) * ox / 2; a.x += s; b.x -= s; }
+  }
+}
+function runLayout(nodes) {
+  nodes.forEach((n, i) => { n.x = X(n.date); n.y = laneMid[n.lane] + ((i * 37) % 11 - 5) * 3; });
+  for (let k = 0; k < 1500; k++) {
+    nodes.forEach(n => {
+      n.x += (X(n.date) - n.x) * 0.025;
+      n.y += (laneMid[n.lane] - n.y) * 0.03;
+    });
+    rectForce(nodes);
+    nodes.forEach(n => {
+      n.y = Math.max(laneTop[n.lane] + n.r + 6, Math.min(laneBot[n.lane] - n.r - 22, n.y));
+      n.x = Math.max(n.r + 10, Math.min(W - 60, n.x));
+    });
+  }
+  // final pass without springs: settle any residual overlaps
+  for (let k = 0; k < 1500; k++) {
+    rectForce(nodes);
+    nodes.forEach(n => {
+      n.y = Math.max(laneTop[n.lane] + n.r + 6, Math.min(laneBot[n.lane] - n.r - 22, n.y));
+      n.x = Math.max(n.r + 10, Math.min(W - 60, n.x));
+    });
+  }
+}
+// LAYOUT-END
+
+if (typeof document === "undefined") { return; }
+
+const nodes = buildNodes();
+const byId = Object.fromEntries(nodes.map(n => [n.id, n]));
+const links = EDGES.map(([s, t]) => ({ s: byId[s], t: byId[t] }));
+const adj = Object.fromEntries(nodes.map(n => [n.id, new Set([n.id])]));
+EDGES.forEach(([s, t]) => { adj[s].add(t); adj[t].add(s); });
+runLayout(nodes);
+
+const svg = d3.select("#am-svg").attr("viewBox", `0 0 ${W} ${H}`);
+const defs = svg.append("defs");
+[["am-arrow", "#8a8a8a"], ["am-arrow-hi", "#0F6E56"]].forEach(([id, c]) => {
+  defs.append("marker").attr("id", id).attr("viewBox", "0 0 10 10").attr("refX", 9).attr("refY", 5)
+    .attr("markerWidth", 6).attr("markerHeight", 6).attr("orient", "auto")
+    .append("path").attr("d", "M0,0 L10,5 L0,10 z").attr("fill", c);
+});
+
+// lane bands + labels
+const bands = svg.append("g");
+LANES.forEach((l, i) => {
+  bands.append("rect").attr("x", 0).attr("y", laneTop[i]).attr("width", W).attr("height", l.h)
+    .attr("fill", FAM[l.fam].fill).attr("opacity", 0.09);
+  bands.append("line").attr("x1", 0).attr("x2", W).attr("y1", laneTop[i]).attr("y2", laneTop[i])
+    .attr("stroke", "currentColor").attr("opacity", 0.1);
+  bands.append("text").attr("class", "am-lane-label").attr("x", 14).attr("y", laneMid[i] - 3).text(l.label);
+  bands.append("text").attr("class", "am-lane-sub").attr("x", 14).attr("y", laneMid[i] + 12).text(l.sub);
+});
+// year grid
+const ticks = [2014, 2017, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
+const grid = svg.append("g");
+ticks.forEach(yr => {
+  grid.append("line").attr("x1", X(yr)).attr("x2", X(yr)).attr("y1", TOP - 8).attr("y2", H - BOTTOM)
+    .attr("stroke", "currentColor").attr("opacity", 0.1).attr("stroke-dasharray", "2 4");
+  grid.append("text").attr("class", "am-year").attr("x", X(yr)).attr("y", TOP - 16).attr("text-anchor", "middle").text(yr);
+});
+
+const linkSel = svg.append("g").selectAll("line").data(links).join("line")
+  .attr("stroke", "#8a8a8a").attr("stroke-width", 1).attr("marker-end", "url(#am-arrow)");
+
+const nodeSel = svg.append("g").selectAll("g").data(nodes).join("g").style("cursor", "pointer");
+nodeSel.append("circle").attr("r", d => d.r).attr("fill", d => FAM[d.fam].fill)
+  .attr("stroke", d => FAM[d.fam].stroke).attr("stroke-width", 1.5);
+nodeSel.filter(d => d.prod).append("circle").attr("r", d => d.r + 4).attr("fill", "none")
+  .attr("stroke", d => FAM[d.fam].stroke).attr("stroke-width", 1.5).attr("stroke-dasharray", "3 2");
+nodeSel.append("text").attr("class", "am-nlabel").attr("text-anchor", "middle")
+  .attr("y", d => d.r + 14).text(d => d.label);
+
+function draw() {
+  linkSel.each(function (d) {
+    const dx = d.t.x - d.s.x, dy = d.t.y - d.s.y, len = Math.hypot(dx, dy) || 1;
+    const ux = dx / len, uy = dy / len;
+    const sr = d.s.r + (d.s.prod ? 5 : 1), tr = d.t.r + (d.t.prod ? 6 : 2);
+    d3.select(this).attr("x1", d.s.x + ux * sr).attr("y1", d.s.y + uy * sr)
+      .attr("x2", d.t.x - ux * tr).attr("y2", d.t.y - uy * tr);
+  });
+  nodeSel.attr("transform", d => `translate(${d.x},${d.y})`);
+}
+draw();
+
+// ---------- interaction ----------
+const activeFam = new Set(Object.keys(FAM));
+let hoverId = null, query = "";
+const visible = d => activeFam.has(d.fam) && (!query || d.label.toLowerCase().includes(query) || d.id.includes(query));
+
+function refresh() {
+  nodeSel.attr("opacity", d => hoverId ? (adj[hoverId].has(d.id) ? 1 : 0.12) : (visible(d) ? 1 : 0.1));
+  linkSel
+    .attr("stroke-opacity", d => hoverId ? ((d.s.id === hoverId || d.t.id === hoverId) ? 0.95 : 0.04)
+      : (visible(d.s) && visible(d.t) ? 0.28 : 0.04))
+    .attr("stroke", d => hoverId && (d.s.id === hoverId || d.t.id === hoverId) ? "#0F6E56" : "#8a8a8a")
+    .attr("stroke-width", d => hoverId && (d.s.id === hoverId || d.t.id === hoverId) ? 1.8 : 1)
+    .attr("marker-end", d => hoverId && (d.s.id === hoverId || d.t.id === hoverId) ? "url(#am-arrow-hi)" : "url(#am-arrow)");
+}
+refresh();
+
+const wrap = document.getElementById("am-wrap");
+const tip = document.getElementById("am-tip");
+nodeSel
+  .on("mouseenter", (e, d) => {
+    hoverId = d.id; refresh();
+    tip.innerHTML =
+      `<div class="t">${d.label}<span>${Math.floor(d.date)}</span></div>` +
+      `<span class="b cx">${d.cx}</span>` +
+      (d.prod ? `<span class="b pr">in: ${d.prod}</span>` : "") +
+      `<div>${d.desc}</div><div class="h">click to open ${d.link.includes("arxiv.org") ? "arXiv" : "source"}</div>`;
+    tip.style.opacity = 1;
+  })
+  .on("mousemove", e => {
+    const box = wrap.getBoundingClientRect();
+    let x = e.clientX - box.left + wrap.scrollLeft + 14, y = e.clientY - box.top + 14;
+    if (x + 310 > wrap.scrollLeft + box.width) x -= 330;
+    if (y + 170 > box.height) y -= 170;
+    tip.style.left = x + "px"; tip.style.top = y + "px";
+  })
+  .on("mouseleave", () => { hoverId = null; refresh(); tip.style.opacity = 0; })
+  .on("click", (e, d) => { window.open(d.link, "_blank", "noopener"); })
+  .call(d3.drag()
+    .on("drag", (e, d) => { d.x = e.x; d.y = e.y; draw(); }));
+
+// legend / filter chips
+const ctr = document.getElementById("am-controls");
+const search = document.getElementById("am-search");
+Object.entries(FAM).forEach(([k, f]) => {
+  const c = document.createElement("span");
+  c.className = "am-chip";
+  c.innerHTML = `<i style="background:${f.fill};border:1.5px solid ${f.stroke}"></i>${f.name}`;
+  c.onclick = () => { activeFam.has(k) ? activeFam.delete(k) : activeFam.add(k); c.classList.toggle("off", !activeFam.has(k)); refresh(); };
+  ctr.insertBefore(c, search);
+});
+search.addEventListener("input", () => { query = search.value.trim().toLowerCase(); refresh(); });
+})();
+</script>
+```
+
+## Cheat-sheet
+
+| Family | Cost in sequence length *n* | What the model carries at inference | Representative nodes |
+|---|---|---|---|
+| Full softmax | O(n²) compute | KV cache grows linearly with *n* | MHA, MQA/GQA, MLA, FlashAttention |
+| Sparse / local softmax | O(n·w) to sub-quadratic | KV cache (windowed or top-k selected) | Sliding window, BigBird, NSA, DeepSeek Sparse |
+| Linear / kernel | O(n) | one d×d matrix per head | Linear Transformer, Performer, Based |
+| Gated recurrent / SSM | O(n) | fixed-size state, decayed over time | RetNet, GLA, Mamba-2, Lightning |
+| Delta rule / TTT | O(n) | fixed-size state, error-corrected writes | DeltaNet, Gated DeltaNet, Titans |
+| Hybrids | mostly O(n), a few O(n²) layers | small state plus a small KV cache | Qwen3-Next, Kimi Linear, MiniMax-M1 |
